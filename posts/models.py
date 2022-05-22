@@ -12,7 +12,7 @@ class Post(models.Model):
     video = models.FileField(
         upload_to='posts/videos', blank=True, validators=[FileExtensionValidator(allowed_extensions=['mp4','webm'])])
     likes = models.ManyToManyField(settings.AUTH_USER_MODEL, default=None, related_name='post_like',  blank=True)
-    # save =  models.ManyToManyField(settings.AUTH_USER_MODEL, default=None, related_name='post_save',  blank=True)
+    save =  models.ManyToManyField(settings.AUTH_USER_MODEL, default=None, related_name='post_save',  blank=True)
 
     def __str__(self) -> str:
         return f'{self.postContent}'

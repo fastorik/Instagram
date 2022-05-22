@@ -43,7 +43,7 @@ class PostSerializerView(serializers.ModelSerializer):
 class LikeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Post
-        fields = ['likes', 'postContent']
+        fields = ['likes', 'save', 'postContent']
         read_only_fields = ['postContent']
 
     # def create(self, validated_data):
