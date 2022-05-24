@@ -1,3 +1,4 @@
+from requests import request
 from rest_framework.viewsets import ModelViewSet
 from .models import Post
 from .serializers import PostSerializer, PostSerializerNoLikes, PostSerializerView, LikeSerializer
@@ -10,13 +11,16 @@ class PostViewSet(ModelViewSet):
     def get_queryset(self):
         return Post.objects.select_related('author').\
         prefetch_related('allComments__author').\
-        prefetch_related('likes')
-        # prefetch_related('save')
+        prefetch_related('likes').\
+        prefetch_related('saveSystem').\
+        prefetch_related('tags')
 
 
     def get_serializer_context(self):
         return {'post_author_id': self.request.user.id, 
-                'user':self.request.user
+                'user':self.request.user,
+                'pk': self.request.parser_context.get('kwargs'),
+                'request': self.request
                 }
 
     def get_serializer_class(self):
@@ -33,6 +37,8 @@ class PostViewSet(ModelViewSet):
             return Response(status=status.HTTP_204_NO_CONTENT)
         return PostSerializerNoLikes
 
+    # def perform_create(self, serializer):
+    #     serializer.save()
     # def update(self, request, *args, **kwargs):
     #     pers = request.user.id
     #     post = Post.objects.get(id = kwargs['pk'])
@@ -49,13 +55,3 @@ class PostViewSet(ModelViewSet):
     #         # serializer.save()
     #         # return Response(serializer.data)
     #         return Response({'error': 'Not an author'},status=status.HTTP_405_METHOD_NOT_ALLOWED)
-
-
-
-    # def update(self, request, *args, **kwargs):
-    #         partial = kwargs.pop('partial', True)
-    #         instance = self.get_object()
-    #         serializer = self.get_serializer(instance, data=request.data, partial=partial)
-    #         serializer.is_valid(raise_exception=True)
-    #         serializer.save()
-    #         return Response(serializer.data)

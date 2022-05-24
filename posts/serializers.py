@@ -23,7 +23,7 @@ class PostSerializerNoLikes(serializers.ModelSerializer):
 class PostSerializer(serializers.ModelSerializer):
     class Meta:
         model = Post
-        fields = ['id','image' ,'video', 'postContent', 'author', 'likes', 'save']
+        fields = ['id','image' ,'video', 'postContent', 'author', 'likes', 'saveSystem']
         read_only_fields = ['author']
         permission_classes = (IsAuthenticatedOrReadOnly)
 
@@ -38,14 +38,34 @@ class PostSerializerView(serializers.ModelSerializer):
     author = UserSerializerExpanded()
     class Meta:
         model = Post
-        fields = ['id' ,'image', 'video', 'postContent', 'author', 'total_likes', 'likes', 'allComments']
+        fields = ['id' ,'image', 'video', 'postContent', 'author', 'total_likes', 'likes','allComments']
 
 class LikeSerializer(serializers.ModelSerializer):
+    # likes1 = serializers.SerializerMethodField(method_name='likes')
+
+    # def likes(self, post:Post):
+    #     user = self.context['post_author_id']
+    #     pk  = self.context['pk']
+    #     like = post.likes.through.objects.get(post_id=pk['pk'], newuser_id=user)
+    #     user_id = like.newuser_id
+    #     print(user_id)
+    #     return user_id
+
+
+
+    # def likes(self, post:Post):
+    #     x = Post(likes= self.context['user'])
+    #     # print(self.context['user'])
+    #     # self.context['request'].user
+    #     return x
+
+    # @staticmethod
+    # def get_content(obj):
+    #     print('AAAAAAAAAAAAAA', obj)
+    #     return obj
+    #     # if obj.likes > timezone.now():
+    #     #     return None
+    #     # return obj.content
     class Meta:
         model = Post
-        fields = ['likes', 'save', 'postContent']
-        read_only_fields = ['postContent']
-
-    # def create(self, validated_data):
-    #     author_id = self.context['post_author_id']
-    #     return Post.objects.create(author_id=author_id, **validated_data)
+        fields = ['likes', 'saveSystem']

@@ -63,8 +63,8 @@ INSTALLED_APPS = [
     'comments',
     'user',
     'posts',
+    'tags',
     "debug_toolbar",
-    'generic_relations',
 ]
 
 MIDDLEWARE = [

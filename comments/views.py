@@ -4,7 +4,7 @@ from .models import Comment
 from .serializers import SimpleCommentSerializer, CommentSerializer
 from rest_framework.response import Response
 from rest_framework import status
-# from likes.models import Likes
+
 
 
 class CommentViewSet(CreateModelMixin,
@@ -29,3 +29,4 @@ class CommentViewSet(CreateModelMixin,
         elif self.request.method == 'DELETE':
             return Response(status=status.HTTP_204_NO_CONTENT)
         return SimpleCommentSerializer
+

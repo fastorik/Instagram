@@ -1,3 +1,4 @@
+from attr import field
 from rest_framework import serializers
 from .models import Comment
 from user.models import NewUser
@@ -10,7 +11,7 @@ class UserSerializer(serializers.ModelSerializer):
 class CommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comment
-        fields = ['id', 'author', 'comment', 'time' ]
+        fields = ['id', 'author', 'comment', 'time',  ]
         read_only_fields = ['author']
 
     def create(self, validated_data):
@@ -24,4 +25,3 @@ class SimpleCommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comment
         fields = ['id' ,'author', 'comment', 'time']
-
