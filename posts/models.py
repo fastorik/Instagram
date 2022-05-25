@@ -3,6 +3,8 @@ from instagram import settings
 from django.core.validators import FileExtensionValidator
 from django.contrib.contenttypes.fields import GenericRelation
 from tags.models import TaggedItem
+
+
 class Post(models.Model):
     postContent = models.CharField(max_length=500)
     author = models.ForeignKey(

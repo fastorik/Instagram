@@ -24,4 +24,17 @@ class SimpleCommentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Comment
-        fields = ['id' ,'author', 'comment', 'time']
+        fields = ['id' ,'author', 'comment', 'total_likes', 'time']
+
+class LikeSerializer(serializers.ModelSerializer):
+    def validate(self, data):
+            for user in data['likes']:
+                currentUser = self.context['comment_author_id']
+                if user.id != currentUser:
+                    raise serializers.ValidationError(
+                    'Not a user')
+            return data
+
+    class Meta:
+        model = Comment
+        fields = ['likes']

@@ -1,4 +1,3 @@
-from django.contrib.contenttypes.fields import GenericRelation
 from django.db import models
 from posts.models import Post
 from instagram import settings
@@ -17,3 +16,8 @@ class Comment(models.Model):
 
     def __str__(self) -> str:
         return f'{self.comment}'
+
+
+    @property
+    def total_likes(self):
+        return self.likes.count()

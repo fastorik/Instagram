@@ -1,5 +1,4 @@
 from rest_framework import serializers
-from tags.models import TaggedItem
 from .models import Post
 from comments.serializers import SimpleCommentSerializer
 from user.models import NewUser
@@ -39,21 +38,24 @@ class PostSerializer(serializers.ModelSerializer):
                     raise serializers.ValidationError(
                     'Not a user')
         return data
-        
+
     def create(self, validated_data):
         author_id = self.context['post_author_id']
         return Post.objects.create(author_id=author_id, **validated_data)
 
 
+# class TagSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = TaggedItem
+#         fields = ['tag']
 
 class PostSerializerView(serializers.ModelSerializer):
     allComments = SimpleCommentSerializer(
         many=True, required=False, read_only=True)
     author = UserSerializerExpanded()
-
     class Meta:
         model = Post
-        fields = ['id' ,'image', 'video', 'postContent', 'author', 'total_likes', 'likes','allComments']
+        fields = ['id' ,'image', 'video', 'postContent', 'author','total_likes', 'likes','allComments']
 
 class LikeSerializer(serializers.ModelSerializer):
     # likes1 = serializers.SerializerMethodField(method_name='likes')
@@ -82,14 +84,10 @@ class LikeSerializer(serializers.ModelSerializer):
         fields = ['likes', 'saveSystem']
 
 
-
-
-
 # class TagUnrelatedSerializer(serializers.ModelSerializer):
 #     class Meta:
 #         model = TaggedItem
 #         fields = ['tag']
-
 
 # class PostSerializerTags(PostSerializer):
 #     tags = TagUnrelatedSerializer()
@@ -97,9 +95,7 @@ class LikeSerializer(serializers.ModelSerializer):
 #     class Meta(PostSerializer.Meta):
 #         fields = (*PostSerializer.Meta.fields, 'tags')
 
-
 # class TagSerializer(TagUnrelatedSerializer):
 #     post = PostUnrelatedSerializer(many = True)
-
 #     class Meta(TagUnrelatedSerializer.Meta):
 #         fields = (*TagUnrelatedSerializer.Meta.fields, 'tags')
