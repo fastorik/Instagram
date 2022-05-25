@@ -1,10 +1,8 @@
-from requests import request
 from rest_framework.viewsets import ModelViewSet
 from .models import Post
 from .serializers import PostSerializer, PostSerializerNoLikes, PostSerializerView, LikeSerializer
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework.response import Response
 
 class PostViewSet(ModelViewSet):
 

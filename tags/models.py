@@ -19,8 +19,10 @@ class Tag(models.Model):
 
 class TaggedItem(models.Model):
     objects = TaggedItemManager()
-    tag = models.ForeignKey(Tag, on_delete=models.CASCADE)
+    tag = models.CharField(max_length=255)
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
     object_id = models.PositiveIntegerField()
     content_object = GenericForeignKey('content_type', 'object_id' )
+    def __str__(self) -> str:
+        return self.tag
 

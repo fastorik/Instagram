@@ -85,16 +85,14 @@ class LikeSerializer(serializers.ModelSerializer):
         for user in data['likes']:
             currentUser = self.context['user']
             if user.id != currentUser.id:
-                print(user.id)
                 raise serializers.ValidationError(
                 'Not a user')
             for user in data['saveSystem']:
                 if user.id != currentUser.id:
-                    print(user.id)
                     raise serializers.ValidationError(
                     'Not a user')
         return data
-        
+
     class Meta:
         model = Post
         fields = ['likes', 'saveSystem']
