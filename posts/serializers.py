@@ -44,18 +44,40 @@ class PostSerializer(serializers.ModelSerializer):
         return Post.objects.create(author_id=author_id, **validated_data)
 
 
-# class TagSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = TaggedItem
-#         fields = ['tag']
+class TagSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TaggedItem
+        fields = ['tag', "conent_object"]
+        write_only_fields = ("content_object"),
 
 class PostSerializerView(serializers.ModelSerializer):
+    tags = TagSerializer(required=False, many=True)
+
     allComments = SimpleCommentSerializer(
         many=True, required=False, read_only=True)
     author = UserSerializerExpanded()
+
     class Meta:
         model = Post
-        fields = ['id' ,'image', 'video', 'postContent', 'author','total_likes', 'likes','allComments']
+        fields = ['id' ,'image', 'video', 'postContent', 'author','total_likes', 'likes','allComments', "tags",]
+        
+    def create(self, validated_data):
+        tags = validated_data.pop("tags")
+        created_post = super().create(validated_data)
+        
+        for tag in tags:
+            tag_data = {
+                **tag,
+                "content_object": created_post
+            }
+            TaggedItem.objects.create(data=tag_data)
+            // OR
+            tag_serializer = TagSerializer(data=tag_data)
+            tag_serializer.is_valid(raise_exception=True)
+            tag_serializer.save()
+            
+        
+        
 
 class LikeSerializer(serializers.ModelSerializer):
     # likes1 = serializers.SerializerMethodField(method_name='likes')
