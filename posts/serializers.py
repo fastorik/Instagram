@@ -3,6 +3,8 @@ from .models import Post
 from comments.serializers import SimpleCommentSerializer
 from user.models import NewUser
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from generic_relations.relations import GenericRelatedField
+# from tags.models import Tag
 
 class UserSerializerExpanded(serializers.ModelSerializer):
     class Meta:
@@ -19,8 +21,19 @@ class PostSerializerNoLikes(serializers.ModelSerializer):
     def create(self, validated_data):
         author_id = self.context['post_author_id']
         return Post.objects.create(author_id=author_id, **validated_data)
-
+# class TagSerializer(serializers.ModelSerializer):
+#     """
+#     A `TaggedItem` serializer with a `GenericRelatedField` mapping all possible
+#     models to their respective serializers.
+#     """
+#     # content_object = GenericRelatedField({
+#     #     Post: 'PostSerializer()',
+#     # })
+#     class Meta:
+#         model = Tag
+#         fields = ['label']
 class PostSerializer(serializers.ModelSerializer):
+    # tags = TagSerializer(many=True)
     class Meta:
         model = Post
         fields = ['id','image' ,'video', 'postContent', 'author', 'likes', 'saveSystem']
@@ -66,6 +79,23 @@ class LikeSerializer(serializers.ModelSerializer):
     #     # if obj.likes > timezone.now():
     #     #     return None
     #     # return obj.content
+
+
+    def validate(self, data):
+        for user in data['likes']:
+            currentUser = self.context['user']
+            if user.id != currentUser.id:
+                print(user.id)
+                raise serializers.ValidationError(
+                'Not a user')
+            for user in data['saveSystem']:
+                if user.id != currentUser.id:
+                    print(user.id)
+                    raise serializers.ValidationError(
+                    'Not a user')
+        return data
+        
     class Meta:
         model = Post
         fields = ['likes', 'saveSystem']
+

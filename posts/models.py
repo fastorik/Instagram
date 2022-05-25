@@ -16,7 +16,6 @@ class Post(models.Model):
     likes = models.ManyToManyField(settings.AUTH_USER_MODEL, default=None, related_name='like',  blank=True)
     saveSystem =  models.ManyToManyField(settings.AUTH_USER_MODEL, default=None, related_name='save',  blank=True)
     tags = GenericRelation(TaggedItem, related_query_name='tags')
-
     def __str__(self) -> str:
         return f'{self.postContent}'
 
